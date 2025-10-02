@@ -3,7 +3,7 @@
 #include <iomanip>
 #include <limits>
 
-static void printMainMenu() {
+static void printMainMenu() { //***** */
     std::cout << "1. Insertion\n"
             "2. Search\n"
             "3. Sorting Option\n"
