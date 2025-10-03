@@ -50,6 +50,7 @@ private:
     static bool validTel(const std::string& s);         // 전화번호 검증
 
     bool existsID(const std::string& ID) const;
+    bool existsTel(const std::string& Tel) const;
     
     std::string          path_;
     std::vector<Student> data_;
