@@ -68,6 +68,16 @@ bool StudentDB::existsID(const std::string& id) const {
     return false; // 끝까지 못 찾으면 false
 }
 
+// 메모리 내 전화번호 중복 여부 확인 (선형 탐색)
+bool StudentDB::existsTel(const std::string& Tel) const {
+    for (const Student& s : data_) {
+        if (s.tel == Tel) {
+            return true;
+        }
+    }
+    return false;
+}
+
 // ========================== 본체 구현부 ==========================
 
 StudentDB::StudentDB(const std::string& path) {
@@ -140,20 +150,12 @@ bool StudentDB::save() const {
 }
 
 // ========================== 삽입 ==========================
-// 내부에서 에러 메시지 버전 호출
-bool StudentDB::insert(const Student& s) {
-    std::vector<std::string> err;
-    bool ok = insert(s, err);
-    if (!ok && err[0] == "DUP") {
-        std::cout << "Error : Already inserted\n";
-    }
-    return ok;
-}
 
 // 에러 사유 반환형 insert
 bool StudentDB::insert(const Student& s, std::vector<std::string>& err) {
     // 학번 중복 금지
-    if (existsID(s.studentID)) { err.push_back("DUP"); return false; }
+    if (existsID(s.studentID)) { err.push_back("DUP_ID"); return false; }
+    if (existsTel(s.tel)) { err.push_back("DUP_TEL"); return false; }
 
     if (!validName(s.name))               { err.push_back("Name"); }
     if (!validStudentID(s.studentID))     { err.push_back("Student ID"); }
@@ -254,7 +256,7 @@ std::vector<Student>& StudentDB::sortByKey() {
 
 // ========================== 수정 ==========================
 bool StudentDB::updateName(const std::string& studentID, const std::string& newName, std::string& err) {
-    if (!validName(newName)) { err = "Invalid name"; return false; }
+    if (!validName(newName)) { err = "Name"; return false; }
     for (auto& s : data_) {
         if (s.studentID == studentID) {
             s.name = newName;
@@ -265,7 +267,7 @@ bool StudentDB::updateName(const std::string& studentID, const std::string& newN
 }
 
 bool StudentDB::updateDepartment(const std::string& studentID, const std::string& newDept, std::string& err) {
-    if (!validDepartment(newDept)) { err = "Invalid department name"; return false; }
+    if (!validDepartment(newDept)) { err = "Department"; return false; }
     for (auto& s : data_) {
         if (s.studentID == studentID) {
             s.department = newDept;
@@ -276,6 +278,8 @@ bool StudentDB::updateDepartment(const std::string& studentID, const std::string
 }
 
 bool StudentDB::updateTel(const std::string& studentID, const std::string& newTel, std::string& err) {
+    if (!validTel(newTel)) { err = "Telephone number"; return false; }
+    if (existsTel(newTel)) { err = "\nTelephone number already exists.\n\n"; return false; }
     for (auto& s : data_) {
         if (s.studentID == studentID) {
             s.tel = newTel;
