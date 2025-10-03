@@ -42,6 +42,11 @@ bool StudentDB::validStudentID(const std::string& s) {
     return (year >= 1900 && year <= 2100);
 }
 
+// 단과대 유효성: 길이 <= 20, 영문/공백만 허용
+bool StudentDB::validDepartment(const std::string& s) {
+    return s.size() <= 20 && isAlphaSpace(s);
+}
+
 // 출생연도 유효성: 1900~2100 범위의 정수 (4자리를 실수 방지 차원에서 범위로 보장)
 bool StudentDB::validBirthYear(int y) {
     return (y >= 1900 && y <= 2100);
@@ -69,12 +74,17 @@ StudentDB::StudentDB(const std::string& path) {
     path_ = path;
 }
 
+bool StudentDB::isEmpty() const {
+    return data_.empty();
+}
+
 // 파일에서 데이터 로딩
 bool StudentDB::load() {
     std::ifstream fin(path_);
     if (!fin.is_open()) {
         // 파일 없으면 새로 생성(빈 파일 준비)
         std::ofstream create(path_);
+        std::cout << "File \'" << path_ << "\' does not exist. File created.\n\n";
         return create.is_open();
     }
 
@@ -99,11 +109,12 @@ bool StudentDB::load() {
 
         // 유효성 검증에 통과한 레코드만 적재
         Student s{ name, studentID, by, dept, tel };
-        if (!validName(s.name))            continue;
-        if (!validStudentID(s.studentID))  continue;
-        if (!validBirthYear(s.birthYear))  continue;
-        if (!validTel(s.tel))              continue;
-        if (existsID(s.studentID))         continue; // 파일 내 중복이 있으면 첫 항목만 채택
+        if (!validName(s.name))             continue;
+        if (!validStudentID(s.studentID))   continue;
+        if (!validBirthYear(s.birthYear))   continue;
+        if (!validDepartment(s.department)) continue;
+        if (!validTel(s.tel))               continue;
+        if (existsID(s.studentID))          continue; // 파일 내 중복이 있으면 첫 항목만 채택
 
         data_.push_back(std::move(s));
     }
@@ -131,28 +142,33 @@ bool StudentDB::save() const {
 // ========================== 삽입 ==========================
 // 내부에서 에러 메시지 버전 호출
 bool StudentDB::insert(const Student& s) {
-    std::string err;
+    std::vector<std::string> err;
     bool ok = insert(s, err);
-    if (!ok && err == "DUP") {
+    if (!ok && err[0] == "DUP") {
         std::cout << "Error : Already inserted\n";
     }
     return ok;
 }
 
 // 에러 사유 반환형 insert
-bool StudentDB::insert(const Student& s, std::string& err) {
-    if (!validName(s.name))               { err = "Invalid name"; return false; }
-    if (!validStudentID(s.studentID))     { err = "Invalid studentId"; return false; }
-    if (!validBirthYear(s.birthYear))     { err = "Invalid birthYear"; return false; }
-    if (!validTel(s.tel))                 { err = "Invalid tel"; return false; }
-    if (s.name.empty() || s.studentID.empty()) { err = "Empty required"; return false; }
-
+bool StudentDB::insert(const Student& s, std::vector<std::string>& err) {
     // 학번 중복 금지
-    if (existsID(s.studentID)) { err = "DUP"; return false; }
+    if (existsID(s.studentID)) { err.push_back("DUP"); return false; }
 
-    data_.push_back(s);
-    err.clear();
-    return true;
+    if (!validName(s.name))               { err.push_back("Name"); }
+    if (!validStudentID(s.studentID))     { err.push_back("Student ID"); }
+    if (!validBirthYear(s.birthYear))     { err.push_back("Birth Year"); }
+    if (!validDepartment(s.department))   { err.push_back("Department"); }
+    if (!validTel(s.tel))                 { err.push_back("Tel"); }
+    if (s.name.empty() || s.studentID.empty()) { err.push_back("Empty required"); }
+
+    if (err.empty()) {
+        data_.push_back(s);
+        err.clear();
+        return true;
+    } else {
+        return false;
+    }
 }
 
 // ========================== 검색 API들 ==========================
@@ -204,42 +220,43 @@ std::vector<Student> StudentDB::searchByDepartmentKeyword(const std::string& kw)
 void StudentDB::setSortKey(SortKey k) { sortKey_ = k; }
 SortKey StudentDB::sortKey() const { return sortKey_; }
 
-std::vector<Student> StudentDB::listAll() const {
-    std::vector<Student> v = data_; // 복사본 정렬
-
+std::vector<Student>& StudentDB::sortByKey() {
     switch (sortKey_) {
         case SortKey::Name:
-            sort(v.begin(), v.end(), [](const Student& a, const Student& b){
+            sort(data_.begin(), data_.end(), [](const Student& a, const Student& b){
                 return (a.name == b.name) ? a.studentID < b.studentID : a.name < b.name;
             });
             break;
 
-        case SortKey::StudentId:
-            sort(v.begin(), v.end(), [](const Student& a, const Student& b){
+        case SortKey::StudentID:
+            sort(data_.begin(), data_.end(), [](const Student& a, const Student& b){
                 return a.studentID < b.studentID;
             });
             break;
 
         case SortKey::BirthYear:
-            sort(v.begin(), v.end(), [](const Student& a, const Student& b){
+            sort(data_.begin(), data_.end(), [](const Student& a, const Student& b){
                 return (a.birthYear == b.birthYear) ? a.studentID < b.studentID : a.birthYear < b.birthYear;
             });
             break;
 
         case SortKey::Department:
-            sort(v.begin(), v.end(), [](const Student& a, const Student& b){
+            sort(data_.begin(), data_.end(), [](const Student& a, const Student& b){
                 return (a.department == b.department) ? a.studentID < b.studentID : a.department < b.department;
             });
             break;
+        
+        default:
+            break;
     }
-    return v;
+    return data_;
 }
 
 // ========================== 수정 ==========================
-bool StudentDB::updateName(const std::string& studentId, const std::string& newName, std::string& err) {
+bool StudentDB::updateName(const std::string& studentID, const std::string& newName, std::string& err) {
     if (!validName(newName)) { err = "Invalid name"; return false; }
     for (auto& s : data_) {
-        if (s.studentID == studentId) {
+        if (s.studentID == studentID) {
             s.name = newName;
             err.clear(); return true;
         }
@@ -247,10 +264,10 @@ bool StudentDB::updateName(const std::string& studentId, const std::string& newN
     err = "Not found"; return false;
 }
 
-bool StudentDB::updateDepartment(const std::string& studentId, const std::string& newDept, std::string& err) {
-    // Dept는 공백 허용 → 길이 제한만(필요시) 둘 수 있음. 여기서는 그대로 허용.
+bool StudentDB::updateDepartment(const std::string& studentID, const std::string& newDept, std::string& err) {
+    if (!validDepartment(newDept)) { err = "Invalid department name"; return false; }
     for (auto& s : data_) {
-        if (s.studentID == studentId) {
+        if (s.studentID == studentID) {
             s.department = newDept;
             err.clear(); return true;
         }
@@ -258,9 +275,9 @@ bool StudentDB::updateDepartment(const std::string& studentId, const std::string
     err = "Not found"; return false;
 }
 
-bool StudentDB::updateTel(const std::string& studentId, const std::string& newTel, std::string& err) {
+bool StudentDB::updateTel(const std::string& studentID, const std::string& newTel, std::string& err) {
     for (auto& s : data_) {
-        if (s.studentID == studentId) {
+        if (s.studentID == studentID) {
             s.tel = newTel;
             err.clear(); return true;
         }
