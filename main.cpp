@@ -12,7 +12,7 @@ static void printMainMenu() {
 }
 
 static void printSearchMenu() {
-    std::cout << "- Search Option -\n"
+    std::cout << "\n- Search Option -\n"
                  "1. Search by Name\n"
                  "2. Search by Student ID (10 digits)\n"
                  "3. Search by Admission Year (4 digits)\n"
@@ -22,7 +22,7 @@ static void printSearchMenu() {
 }
 
 static void printSortMenu() {
-    std::cout << "- Sorting Option -\n"
+    std::cout << "\n- Sorting Option -\n"
                  "1. Sort by Name\n"
                  "2. Sort by Student ID (10 digits)\n"
                  "3. Sort by Birth Year (4digits)\n"
@@ -30,7 +30,7 @@ static void printSortMenu() {
 }
 
 static void printUpdateMenu() {
-    std::cout << "- Update Option -\n"
+    std::cout << "\n- Update Option -\n"
                 "1. Update Name\n"
                 "2. Update Department Name\n"
                 "3. Update Telephone Number\n>"; // 이름, 학과, 전화번호는 바뀔 수 있다고 생각
@@ -96,8 +96,13 @@ int main(int argc, char* argv[]) {
 
     while (true) {
         printMainMenu();
-        int sel{}; if (!(std::cin >> sel)) break;
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 입력 버퍼 지우기
+        int sel{};
+        if (!(std::cin >> sel)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 입력 버퍼 지우기
+            std::cout << "\nInvalid input. Please insert a number between 1 to 5.\n\n";
+            continue;
+        }
 
         if (sel == 1) {
             // Insertion
@@ -117,8 +122,10 @@ int main(int argc, char* argv[]) {
 
             std::vector<std::string> err;
             if (!db.insert(s, err)) {
-                if (err[0] == "DUP") {
-                    std::cout << "Error : Already inserted\n\n";
+                if (err[0] == "DUP_ID") {
+                    std::cout << "\nError : Already inserted\n\n";
+                } else if (err[0] == "DUP_TEL") {
+                    std::cout << "\nError : Already inserted telephone number\n\n";
                 } else {
                     int size = err.size();
 
@@ -143,8 +150,13 @@ int main(int argc, char* argv[]) {
             }
 
             printSearchMenu();
-            int opt{}; if (!(std::cin >> opt)) break;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            int opt{};
+            if (!(std::cin >> opt)) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "\nInvalid input. Please insert a number between 1 to 6.\n\n";
+                continue;
+            }
 
             if (opt == 1) {
                 std::string key; std::cout << "\nName keyword? "; getline(std::cin, key);
@@ -185,6 +197,9 @@ int main(int argc, char* argv[]) {
             } else if (opt == 6) {
                 auto res = db.sortByKey();
                 printStudents(res);
+            } else {
+                std::cout << "\nInvalid input. Please insert a number between 1 to 6.\n\n";
+                continue;
             }
         }
         else if (sel == 3) {
@@ -194,12 +209,22 @@ int main(int argc, char* argv[]) {
             }
 
             printSortMenu();
-            int k{}; if (!(std::cin >> k)) break;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            int k{};
+            if (!(std::cin >> k)) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "\nInvalid input. Please insert a number between 1 to 4.\n\n";
+                continue;
+            }
+
             if      (k == 1) db.setSortKey(SortKey::Name);
             else if (k == 2) db.setSortKey(SortKey::StudentID);
             else if (k == 3) db.setSortKey(SortKey::BirthYear);
             else if (k == 4) db.setSortKey(SortKey::Department);
+            else {
+                std::cout << "\nInvalid input. Please insert a number between 1 to 4.\n\n";
+                continue;
+            }
 
             db.sortByKey();
             db.save();
@@ -212,8 +237,13 @@ int main(int argc, char* argv[]) {
             }
 
             printUpdateMenu();
-            int u{}; if (!(std::cin >> u)) break;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            int u{};
+            if (!(std::cin >> u)) {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "\nInvalid input. Please insert a number between 1 to 3.\n\n";
+                continue;
+            }
 
             if (u == 1) {
                 std::string id, newName, err;
@@ -243,13 +273,20 @@ int main(int argc, char* argv[]) {
                     std::cout << "Updated.\n\n"; db.save();
                 } else {
                     if (err == "Not found") std::cout << "No student found.\n\n";
-                    else std::cout << "Invalid input: " << err << '\n';
+                    else if (err == "\nTelephone number already exists.\n\n") std::cout << err;
+                    else std::cout << "Invalid input: " << err << "\n\n";
                 }
+            } else {
+                std::cout << "\nInvalid input. Please insert a number between 1 to 3.\n\n";
+                continue;
             }
         }
         else if (sel == 5) {
             db.save();
             break;
+        } else {
+            std::cout << "\nInvalid input. Please insert a number between 1 to 5.\n\n";
+            continue;
         }
     }
     return 0;
