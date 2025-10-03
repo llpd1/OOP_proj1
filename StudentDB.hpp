@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 
-enum class SortKey { Name, StudentId, BirthYear, Department };
+enum class SortKey { Name, StudentID, BirthYear, Department };
 
 class StudentDB {
 public:
@@ -15,9 +15,12 @@ public:
     bool load();
     bool save() const;
 
+    // 데이터가 비었는지 확인
+    bool isEmpty() const;
+
     // 삽입(중복 학번 체크)
     bool insert(const Student& s); // 검증/중복학번
-    bool insert(const Student& s, std::string& err); // 정렬된 복사 반환
+    bool insert(const Student& s, std::vector<std::string>& err); // 정렬된 복사 반환
 
     // 검색
     std::vector<Student> searchByName(const std::string& key) const;      
@@ -27,16 +30,14 @@ public:
     std::vector<Student> searchByDepartmentKeyword(const std::string& kw) const; 
 
     // 정렬 옵션
+    std::vector<Student>& sortByKey();
     void setSortKey(SortKey k);
     SortKey sortKey() const;
 
-    // 전체 나열(현재 정렬 기준으로)
-    std::vector<Student> listAll() const; // 정렬된 복사 반환
-
-    // 수정
-    bool updateName(const std::string& studentId, const std::string& newName, std::string& err);
-    bool updateDepartment(const std::string& studentId, const std::string& newDept, std::string& err);
-    bool updateTel(const std::string& studentId, const std::string& newTel, std::string& err);
+    // 추가기능: 수정
+    bool updateName(const std::string& studentID, const std::string& newName, std::string& err);
+    bool updateDepartment(const std::string& studentID, const std::string& newDept, std::string& err);
+    bool updateTel(const std::string& studentID, const std::string& newTel, std::string& err);
 
 private:
     static bool isDigits(const std::string& s);         // 숫자만
@@ -44,14 +45,15 @@ private:
     static std::string toLower(std::string s);          // 소문자 변환
     static bool validName(const std::string& s);        // 이름 검증
     static bool validStudentID(const std::string& s);   // 학번 검증
+    static bool validDepartment(const std::string& s);  // 단과대 검증
     static bool validBirthYear(int y);                  // 출생연도 검증
     static bool validTel(const std::string& s);         // 전화번호 검증
 
-    bool existsID(const std::string& id) const;
+    bool existsID(const std::string& ID) const;
     
     std::string          path_;
     std::vector<Student> data_;
-    SortKey              sortKey_{SortKey::Name};
+    SortKey              sortKey_;
 };
 
 #endif // STUDENT_DB_HPP
