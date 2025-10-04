@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <sstream>
 #include <cctype>
+#include <map>
 
 StudentDB::StudentDB(const std::string& path)
 : path_(path), repository_(path) {}
@@ -196,4 +197,28 @@ bool StudentDB::updateTel(const std::string& studentID, const std::string& newTe
         }
     }
     err = "Not found"; return false;
+}
+//요약 통계
+std::map<std::string,int> StudentDB::countsByDepartment() const {
+    std::map<std::string,int> m;
+    for (const auto& s : data_) {
+        ++m[s.department];
+    }
+    return m;
+}
+
+std::map<int,int> StudentDB::countsByAdmissionYear() const {
+    std::map<int,int> m;
+    for (const auto& s : data_) {
+        if (s.studentID.size() >= 4) {
+            // 학번 앞 4자리는 입학년도
+            try {
+                int ay = std::stoi(s.studentID.substr(0,4));
+                ++m[ay];
+            } catch (...) {
+                // 무시 (기존 로직 영향 없음)
+            }
+        }
+    }
+    return m;
 }
