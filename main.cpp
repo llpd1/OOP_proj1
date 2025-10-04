@@ -33,7 +33,7 @@ static void printUpdateMenu() {
     std::cout << "\n- Update Option -\n"
                 "1. Update Name\n"
                 "2. Update Department Name\n"
-                "3. Update Telephone Number\n>"; // 이름, 학과, 전화번호는 바뀔 수 있다고 생각
+                "3. Update Telephone Number\n>";
 }
 
 static void printStudents(const std::vector<Student>& list) {
@@ -52,25 +52,15 @@ static void printStudents(const std::vector<Student>& list) {
               << std::setw(W_TEL)    << "Tel"
               <<'\n';
 
-    for (int i = 0; i < W_NAME + 1; i++) {
-        std::cout << '-';
-    }
+    for (int i = 0; i < W_NAME + 1; i++) std::cout << '-';
     std::cout << "+-";
-    for (int i = 0; i < W_ID + 1; i++) {
-        std::cout << '-';
-    }
+    for (int i = 0; i < W_ID + 1; i++) std::cout << '-';
     std::cout << "+-";
-    for (int i = 0; i < W_DEPT + 1; i++) {
-        std::cout << '-';
-    }
+    for (int i = 0; i < W_DEPT + 1; i++) std::cout << '-';
     std::cout << "+-";
-    for (int i = 0; i < W_B_YEAR + 1; i++) {
-        std::cout << '-';
-    }
+    for (int i = 0; i < W_B_YEAR + 1; i++) std::cout << '-';
     std::cout << "+-";
-    for (int i = 0; i < W_TEL + 1; i++) {
-        std::cout << '-';
-    }
+    for (int i = 0; i < W_TEL + 1; i++) std::cout << '-';
     std::cout << '\n';
 
     for (const auto& s : list) {
@@ -82,7 +72,6 @@ static void printStudents(const std::vector<Student>& list) {
                   << std::setw(W_TEL)    << s.tel
                   <<'\n';
     }
-
     std::cout << '\n';
 }
 
@@ -102,11 +91,9 @@ int main(int argc, char* argv[]) {
             std::cout << "\nInvalid input. Please insert a number between 1 to 5.\n\n";
             continue;
         }
-
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 입력 버퍼 지우기
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         if (sel == 1) {
-            // Insertion
             Student s;
             std::cout << "\nName ?\n";        getline(std::cin, s.name);
             std::cout << "Student ID (10 digits)?\n"; getline(std::cin, s.studentID);
@@ -123,19 +110,16 @@ int main(int argc, char* argv[]) {
 
             std::vector<std::string> err;
             if (!db.insert(s, err)) {
-                if (err[0] == "DUP_ID") {
+                if (err.size() && err[0] == "DUP_ID") {
                     std::cout << "\nError : Already inserted\n\n";
-                } else if (err[0] == "DUP_TEL") {
+                } else if (err.size() && err[0] == "DUP_TEL") {
                     std::cout << "\nError : Already inserted telephone number\n\n";
                 } else {
-                    int size = err.size();
-
+                    int size = static_cast<int>(err.size());
                     std::cout << "\nInvalid input: ";
                     for (int i = 0; i < size; i++) {
                         std::cout << err[i];
-                        if (i != size - 1) {
-                            std::cout << ", ";
-                        }
+                        if (i != size - 1) std::cout << ", ";
                     }
                     std::cout << "\n\n";
                 }
@@ -149,7 +133,6 @@ int main(int argc, char* argv[]) {
                 std::cout << "\nDatabase is empty. Please insert students first.\n\n";
                 continue;
             }
-
             printSearchMenu();
             int opt{};
             if (!(std::cin >> opt)) {
@@ -157,7 +140,6 @@ int main(int argc, char* argv[]) {
                 std::cout << "\nInvalid input. Please insert a number between 1 to 6.\n\n";
                 continue;
             }
-
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             if (opt == 1) {
@@ -169,13 +151,12 @@ int main(int argc, char* argv[]) {
                 auto res = db.searchById(id);
                 printStudents(res);
             } else if (opt == 3) {
-                int y{};
-                std::cout << "\nAdmission year? ";
+                int y{}; std::cout << "\nAdmission year? ";
                 if (!(std::cin >> y)) {
                     std::cout << "Invalid year\n\n";
                     std::cin.clear();
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    continue; // 메인 메뉴로 복귀
+                    continue;
                 }
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 auto res = db.searchByAdmissionYear(y);
@@ -186,7 +167,7 @@ int main(int argc, char* argv[]) {
                     std::cout << "Invalid year\n\n";
                     std::cin.clear();
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    continue; // 메인 메뉴로 복귀
+                    continue;
                 }
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 auto res = db.searchByBirthYear(y);
@@ -209,7 +190,6 @@ int main(int argc, char* argv[]) {
                 std::cout << "\nDatabase is empty. Please insert students first.\n\n";
                 continue;
             }
-
             printSortMenu();
             int k{};
             if (!(std::cin >> k)) {
@@ -217,7 +197,6 @@ int main(int argc, char* argv[]) {
                 std::cout << "\nInvalid input. Please insert a number between 1 to 4.\n\n";
                 continue;
             }
-
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             if      (k == 1) db.setSortKey(SortKey::Name);
@@ -228,7 +207,6 @@ int main(int argc, char* argv[]) {
                 std::cout << "\nInvalid input. Please insert a number between 1 to 4.\n\n";
                 continue;
             }
-
             db.sortByKey();
             db.save();
             std::cout << "\nSorting updated.\n\n";
@@ -238,7 +216,6 @@ int main(int argc, char* argv[]) {
                 std::cout << "\nDatabase is empty. Please insert students first.\n\n";
                 continue;
             }
-
             printUpdateMenu();
             int u{};
             if (!(std::cin >> u)) {
@@ -246,7 +223,6 @@ int main(int argc, char* argv[]) {
                 std::cout << "\nInvalid input. Please insert a number between 1 to 3.\n\n";
                 continue;
             }
-
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             if (u == 1) {
