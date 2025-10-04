@@ -7,8 +7,10 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <ostream> 
 
 enum class SortKey { Name, StudentID, BirthYear, Department };
+enum class StatKey { AdmissionYear, BirthYear, Department };
 
 class StudentDB {
 public:
@@ -42,9 +44,7 @@ public:
     bool updateDepartment(const std::string& studentID, const std::string& newDept, std::string& err);
     bool updateTel(const std::string& studentID, const std::string& newTel, std::string& err);
 
-    // 요약 통계
-    std::map<std::string, int> countsByDepartment() const;   // 학과별 인원수
-    std::map<int, int>         countsByAdmissionYear() const; // 입학년도별 인원수
+    void groupSummary(const std::vector<StatKey>& order, std::ostream& out) const;
 
 private:
     static std::string toLower(std::string s);  // 소문자 변환
