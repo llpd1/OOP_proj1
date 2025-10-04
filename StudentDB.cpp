@@ -3,6 +3,8 @@
 #include <sstream>
 #include <cctype>
 #include <map>
+#include <string>
+
 
 StudentDB::StudentDB(const std::string& path)
 : path_(path), repository_(path) {}
@@ -198,27 +200,88 @@ bool StudentDB::updateTel(const std::string& studentID, const std::string& newTe
     }
     err = "Not found"; return false;
 }
-//요약 통계
-std::map<std::string,int> StudentDB::countsByDepartment() const {
-    std::map<std::string,int> m;
-    for (const auto& s : data_) {
-        ++m[s.department];
+// 내부 트리 노드
+struct __StatsNode {
+    std::map<std::string, __StatsNode> children; // 하위 그룹
+    int count = 0;                                // 해당 노드(그룹)의 합계
+};
+
+// 출력 라벨(보여줄 때의 꾸밈)
+static std::string __labelOf(StatKey key, const std::string& v) {
+    switch (key) {
+        case StatKey::AdmissionYear: return v + "Admission";   // ex) "2025입학"
+        case StatKey::BirthYear:     return v + "Born";   // ex) "2005년생"
+        case StatKey::Department:    return v;            // 학부/학과명 그대로
+        default:                     return v;
     }
-    return m;
 }
 
-std::map<int,int> StudentDB::countsByAdmissionYear() const {
-    std::map<int,int> m;
-    for (const auto& s : data_) {
-        if (s.studentID.size() >= 4) {
-            // 학번 앞 4자리는 입학년도
-            try {
-                int ay = std::stoi(s.studentID.substr(0,4));
-                ++m[ay];
-            } catch (...) {
-                // 무시 (기존 로직 영향 없음)
+// 학생 레코드에서 키 값 추출
+static std::string __valueOf(const Student& s, StatKey key) {
+    switch (key) {
+        case StatKey::AdmissionYear:
+            if (s.studentID.size() >= 4) {
+                try { return s.studentID.substr(0,4); } catch (...) { return "????"; }
             }
+            return "????";
+        case StatKey::BirthYear:
+            return std::to_string(s.birthYear);
+        case StatKey::Department:
+            return s.department;
+        default:
+            return "";
+    }
+}
+
+// 계층 트리 재귀 출력
+static void __printTree(const __StatsNode& node,
+                        const std::vector<StatKey>& order,
+                        size_t depth,
+                        std::ostream& out,
+                        const std::string& prefix)
+{
+    if (depth >= order.size() || node.children.empty()) {
+        return;
+    }
+
+    StatKey currentKey = order[depth];
+    auto it = node.children.begin();
+    while (it != node.children.end()) {
+        const auto& key = it->first;
+        const auto& childNode = it->second;
+        
+        bool isLast = (++it == node.children.end());
+
+        out << prefix << "+-- " << __labelOf(currentKey, key) << " (" << childNode.count << ")\n";
+
+        std::string nextPrefix = prefix + (isLast ? "    " : "|   ");
+        // 자식 노드에 대해 재귀적으로 함수를 호출
+        __printTree(childNode, order, depth + 1, out, nextPrefix);
+    }
+}
+
+// 공개 API: 계층 요약 통계 출력
+void StudentDB::groupSummary(const std::vector<StatKey>& order, std::ostream& out) const {
+    if (order.empty()) {
+        out << "Total (" << data_.size() << ")\n\n";
+        return;
+    }
+
+    __StatsNode root;
+    root.count = static_cast<int>(data_.size());
+
+    for (const auto& s : data_) {
+        __StatsNode* cur = &root;
+        for (StatKey k : order) {
+            std::string key = __valueOf(s, k);
+            cur = &cur->children[key];
+            cur->count += 1;
         }
     }
-    return m;
+
+    out << "Total (" << root.count << ")\n";
+    
+    __printTree(root, order, 0, out, ""); // 초기 접두사는 비움
+    
+    out << '\n';
 }
