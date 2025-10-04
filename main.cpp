@@ -99,10 +99,11 @@ int main(int argc, char* argv[]) {
         int sel{};
         if (!(std::cin >> sel)) {
             std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 입력 버퍼 지우기
             std::cout << "\nInvalid input. Please insert a number between 1 to 5.\n\n";
             continue;
         }
+
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // 입력 버퍼 지우기
 
         if (sel == 1) {
             // Insertion
@@ -153,10 +154,11 @@ int main(int argc, char* argv[]) {
             int opt{};
             if (!(std::cin >> opt)) {
                 std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "\nInvalid input. Please insert a number between 1 to 6.\n\n";
                 continue;
             }
+
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             if (opt == 1) {
                 std::string key; std::cout << "\nName keyword? "; getline(std::cin, key);
@@ -212,10 +214,11 @@ int main(int argc, char* argv[]) {
             int k{};
             if (!(std::cin >> k)) {
                 std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "\nInvalid input. Please insert a number between 1 to 4.\n\n";
                 continue;
             }
+
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             if      (k == 1) db.setSortKey(SortKey::Name);
             else if (k == 2) db.setSortKey(SortKey::StudentID);
@@ -240,10 +243,11 @@ int main(int argc, char* argv[]) {
             int u{};
             if (!(std::cin >> u)) {
                 std::cin.clear();
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "\nInvalid input. Please insert a number between 1 to 3.\n\n";
                 continue;
             }
+
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             if (u == 1) {
                 std::string id, newName, err;
