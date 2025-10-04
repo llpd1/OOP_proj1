@@ -2,6 +2,8 @@
 #include <iostream>
 #include <iomanip>
 #include <limits>
+#include <sstream>
+#include <set>
 
 static void printMainMenu() {
     std::cout << "1. Insertion\n"
@@ -270,21 +272,37 @@ int main(int argc, char* argv[]) {
             if (db.isEmpty()) {
                 std::cout << "\nDatabase is empty. Please insert students first.\n\n";
             } else {
-                auto dep = db.countsByDepartment();
-                auto ay  = db.countsByAdmissionYear();
+                std::cout << "\n[Statistics]\n"
+                             "Choose grouping order (1~3 items, space-separated):\n"
+                             "  1) Admission Year\n"
+                             "  2) Birth Year\n"
+                             "  3) Department\n"
+                             "Examples:\n"
+                             "  1            -> Admission Year\n"
+                             "  1 2          -> Admission Year -> Birth Year\n"
+                             "  3 1 2        -> Department -> Admission Year -> Birth Year\n"
+                             "> ";
 
-                std::cout << "\n[Statistics] Count by Department\n";
-                for (const auto& kv : dep) {
-                    std::cout << " - " << kv.first << " : " << kv.second << '\n';
+                std::string line;
+                std::getline(std::cin, line);
+
+                std::istringstream iss(line);
+                int x;
+                std::vector<StatKey> order;
+                while (iss >> x) {
+                    if      (x == 1) order.push_back(StatKey::AdmissionYear);
+                    else if (x == 2) order.push_back(StatKey::BirthYear);
+                    else if (x == 3) order.push_back(StatKey::Department);
                 }
 
-                std::cout << "\n[Statistics] Count by Admission Year\n";
-                for (const auto& kv : ay) {
-                    std::cout << " - " << kv.first << " : " << kv.second << '\n';
+                if (order.empty() || order.size() > 3 || std::set<StatKey>(order.begin(), order.end()).size() != order.size()) {
+                    std::cout << "\nInvalid input. Please follow this format : 2 1 3\n\n";
+                } else {
+                    db.groupSummary(order, std::cout);
                 }
-                std::cout << '\n';
             }
         }
+
         else {
             std::cout << "\nInvalid input. Please insert a number between 1 to 6.\n\n";
             continue;
