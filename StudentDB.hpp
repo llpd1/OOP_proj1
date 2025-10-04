@@ -6,6 +6,7 @@
 #include "FileStudentRepository.hpp"
 #include <vector>
 #include <string>
+#include <map>
 
 enum class SortKey { Name, StudentID, BirthYear, Department };
 
@@ -40,6 +41,10 @@ public:
     bool updateName(const std::string& studentID, const std::string& newName, std::string& err);
     bool updateDepartment(const std::string& studentID, const std::string& newDept, std::string& err);
     bool updateTel(const std::string& studentID, const std::string& newTel, std::string& err);
+
+    // 요약 통계
+    std::map<std::string, int> countsByDepartment() const;   // 학과별 인원수
+    std::map<int, int>         countsByAdmissionYear() const; // 입학년도별 인원수
 
 private:
     static std::string toLower(std::string s);  // 소문자 변환
