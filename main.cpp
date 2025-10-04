@@ -33,7 +33,7 @@ static void printUpdateMenu() {
     std::cout << "\n- Update Option -\n"
                 "1. Update Name\n"
                 "2. Update Department Name\n"
-                "3. Update Telephone Number\n>";
+                "3. Update Telephone Number\n> ";
 }
 
 static void printStudents(const std::vector<Student>& list) {
@@ -143,15 +143,15 @@ int main(int argc, char* argv[]) {
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             if (opt == 1) {
-                std::string key; std::cout << "\nName keyword? "; getline(std::cin, key);
+                std::string key; std::cout << "\nName keyword ?\n"; getline(std::cin, key);
                 auto res = db.searchByName(key);
                 printStudents(res);
             } else if (opt == 2) {
-                std::string id; std::cout << "\nStudent ID? "; getline(std::cin, id);
+                std::string id; std::cout << "\nStudent ID ?\n"; getline(std::cin, id);
                 auto res = db.searchById(id);
                 printStudents(res);
             } else if (opt == 3) {
-                int y{}; std::cout << "\nAdmission year? ";
+                int y{}; std::cout << "\nAdmission year ?\n";
                 if (!(std::cin >> y)) {
                     std::cout << "Invalid year\n\n";
                     std::cin.clear();
@@ -162,7 +162,7 @@ int main(int argc, char* argv[]) {
                 auto res = db.searchByAdmissionYear(y);
                 printStudents(res);
             } else if (opt == 4) {
-                int y{}; std::cout << "\nBirth year? ";
+                int y{}; std::cout << "\nBirth year ?\n";
                 if (!(std::cin >> y)) {
                     std::cout << "Invalid year\n\n";
                     std::cin.clear();
@@ -173,7 +173,7 @@ int main(int argc, char* argv[]) {
                 auto res = db.searchByBirthYear(y);
                 printStudents(res);
             } else if (opt == 5) {
-                std::string kw; std::cout << "\nDepartment name keyword? ";
+                std::string kw; std::cout << "\nDepartment name keyword ?\n";
                 getline(std::cin, kw);
                 auto res = db.searchByDepartmentKeyword(kw);
                 printStudents(res);
@@ -227,28 +227,28 @@ int main(int argc, char* argv[]) {
 
             if (u == 1) {
                 std::string id, newName, err;
-                std::cout << "\nStudent ID to update? "; getline(std::cin, id);
-                std::cout << "New Name? ";             getline(std::cin, newName);
+                std::cout << "\nStudent ID to update ?\n"; getline(std::cin, id);
+                std::cout << "New Name ?\n";             getline(std::cin, newName);
                 if (db.updateName(id, newName, err)) {
                     std::cout << "Updated.\n\n"; db.save();
                 } else {
                     if (err == "Not found") std::cout << "No student found.\n\n";
-                    else std::cout << "Invalid input: " << err << '\n';
+                    else std::cout << "Invalid input: " << err << "\n\n";
                 }
             } else if (u == 2) {
                 std::string id, newDept, err;
-                std::cout << "\nStudent ID to update? "; getline(std::cin, id);
-                std::cout << "New Department name? ";  getline(std::cin, newDept);
+                std::cout << "\nStudent ID to update ?\n"; getline(std::cin, id);
+                std::cout << "New Department name ?\n";  getline(std::cin, newDept);
                 if (db.updateDepartment(id, newDept, err)) {
                     std::cout << "Updated.\n\n"; db.save();
                 } else {
                     if (err == "Not found") std::cout << "No student found.\n\n";
-                    else std::cout << "Invalid input: " << err << '\n';
+                    else std::cout << "Invalid input: " << err << "\n\n";
                 }
             } else if (u == 3) {
                 std::string id, newTel, err;
-                std::cout << "\nStudent ID to update? "; getline(std::cin, id);
-                std::cout << "New Telephone number? "; getline(std::cin, newTel);
+                std::cout << "\nStudent ID to update ?\n"; getline(std::cin, id);
+                std::cout << "New Telephone number ?\n"; getline(std::cin, newTel);
                 if (db.updateTel(id, newTel, err)) {
                     std::cout << "Updated.\n\n"; db.save();
                 } else {
