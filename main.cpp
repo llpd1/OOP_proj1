@@ -10,8 +10,8 @@ static void printMainMenu() {
                  "2. Search\n"
                  "3. Sorting Option\n"
                  "4. Update\n"
-                 "5. Exit\n"
-                 "6. Statistics\n> ";
+                 "5. Statistics\n"
+                 "6. Exit\n> ";
 }
 
 static void printSearchMenu() {
@@ -264,11 +264,7 @@ int main(int argc, char* argv[]) {
                 continue;
             }
         }
-        else if (sel == 5) {
-            db.save();
-            break;
-        }
-        else if (sel == 6) { // ADD: Statistics
+        else if (sel == 5) { // ADD: Statistics
             if (db.isEmpty()) {
                 std::cout << "\nDatabase is empty. Please insert students first.\n\n";
             } else {
@@ -302,7 +298,10 @@ int main(int argc, char* argv[]) {
                 }
             }
         }
-
+        else if (sel == 5) {
+            db.save();
+            break;
+        }
         else {
             std::cout << "\nInvalid input. Please insert a number between 1 to 6.\n\n";
             continue;
