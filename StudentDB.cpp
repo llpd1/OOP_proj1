@@ -4,6 +4,8 @@
 #include <cctype>
 #include <map>
 #include <string>
+#include <random>
+#include <iomanip> 
 
 
 StudentDB::StudentDB(const std::string& path)
@@ -83,7 +85,25 @@ bool StudentDB::insert(const Student& s, std::vector<std::string>& err) {
         return false;
     }
 }
+//  ---------- 신입 삽입 ----------
+bool StudentDB::insertFreshman(Student& s, std::vector<std::string>& err) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(0, 999999); // 0 ~ 999999 사이의 6자리 숫자 생성
 
+    const std::string admissionYear = "2025";
+    std::string newID;
+    
+    do {
+        std::stringstream ss;
+        ss << admissionYear << std::setw(6) << std::setfill('0') << distrib(gen);
+        newID = ss.str();
+    } while (existsID(newID));
+
+    s.studentID = newID;
+
+    return insert(s, err);
+}
 // ---------- 검색 ----------
 std::vector<Student> StudentDB::searchByName(const std::string& key) const {
     std::vector<Student> out;
