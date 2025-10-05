@@ -298,7 +298,7 @@ int main(int argc, char* argv[]) {
                 }
             }
         }
-        else if (sel == 5) {
+        else if (sel == 6) {
             db.save();
             break;
         }
