@@ -7,11 +7,12 @@
 
 static void printMainMenu() {
     std::cout << "1. Insertion\n"
-                 "2. Search\n"
-                 "3. Sorting Option\n"
-                 "4. Update\n"
-                 "5. Statistics\n"
-                 "6. Exit\n> ";
+                 "2. Insertion (freshman)\n"
+                 "3. Search\n"
+                 "4. Sorting Option\n"
+                 "5. Update\n"
+                 "6. Statistics\n"
+                 "7. Exit\n> ";
 }
 
 static void printSearchMenu() {
@@ -91,7 +92,7 @@ int main(int argc, char* argv[]) {
         int sel{};
         if (!(std::cin >> sel)) {
             std::cin.clear();
-            std::cout << "\nInvalid input. Please insert a number between 1 to 6.\n\n";
+            std::cout << "\nInvalid input. Please insert a number between 1 to 7.\n\n";
             continue;
         }
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -132,6 +133,41 @@ int main(int argc, char* argv[]) {
             }
         }
         else if (sel == 2) {
+            Student s;
+            std::cout << "\nName ?\n";        getline(std::cin, s.name);
+            // 학번은 사용자에게 입력받지 않음
+            std::cout << "Birth Year (4 digits) ?\n";
+            if (!(std::cin >> s.birthYear)) {
+                std::cout << "Error : Birth Year must be 4 digits number\n";
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                continue;
+            }
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Department ?\n";  getline(std::cin, s.department);
+            std::cout << "Tel ?\n";         getline(std::cin, s.tel);
+
+            std::vector<std::string> err;
+            // StudentDB에 새로 추가한 insertFreshman 함수 호출
+            if (!db.insertFreshman(s, err)) {
+                if (err.size() && err[0] == "DUP_TEL") {
+                    std::cout << "\nError : Already inserted telephone number\n\n";
+                } else {
+                    int size = static_cast<int>(err.size());
+                    std::cout << "\nInvalid input: ";
+                    for (int i = 0; i < size; i++) {
+                        std::cout << err[i];
+                        if (i != size - 1) std::cout << ", ";
+                    }
+                    std::cout << "\n\n";
+                }
+            } else {
+                // 성공 시, 생성된 학번을 사용자에게 알려줌
+                std::cout << "\nInserted with new Student ID: " << s.studentID << "\n\n";
+                db.save();
+            }
+        }
+        else if (sel == 3) {
             if (db.isEmpty()) {
                 std::cout << "\nDatabase is empty. Please insert students first.\n\n";
                 continue;
@@ -188,7 +224,7 @@ int main(int argc, char* argv[]) {
                 continue;
             }
         }
-        else if (sel == 3) {
+        else if (sel == 4) {
             if (db.isEmpty()) {
                 std::cout << "\nDatabase is empty. Please insert students first.\n\n";
                 continue;
@@ -214,7 +250,7 @@ int main(int argc, char* argv[]) {
             db.save();
             std::cout << "\nSorting updated.\n\n";
         }
-        else if (sel == 4) {
+        else if (sel == 5) {
             if (db.isEmpty()) {
                 std::cout << "\nDatabase is empty. Please insert students first.\n\n";
                 continue;
@@ -264,7 +300,7 @@ int main(int argc, char* argv[]) {
                 continue;
             }
         }
-        else if (sel == 5) { // ADD: Statistics
+        else if (sel == 6) { // ADD: Statistics
             if (db.isEmpty()) {
                 std::cout << "\nDatabase is empty. Please insert students first.\n\n";
             } else {
@@ -298,12 +334,12 @@ int main(int argc, char* argv[]) {
                 }
             }
         }
-        else if (sel == 6) {
+        else if (sel == 7) {
             db.save();
             break;
         }
         else {
-            std::cout << "\nInvalid input. Please insert a number between 1 to 6.\n\n";
+            std::cout << "\nInvalid input. Please insert a number between 1 to 7.\n\n";
             continue;
         }
     }
