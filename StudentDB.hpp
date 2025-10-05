@@ -26,6 +26,9 @@ public:
     // 삽입(중복 학번/전화 체크)
     bool insert(const Student& s); // 편의 wrapper
     bool insert(const Student& s, std::vector<std::string>& err);
+    
+    // 신입생 추가를 위한 함수 선언
+    bool insertFreshman(Student& s, std::vector<std::string>& err);
 
     // 검색
     std::vector<Student> searchByName(const std::string& key) const;      
