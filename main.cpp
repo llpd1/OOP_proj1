@@ -6,8 +6,8 @@
 #include <set>
 
 static void printMainMenu() {
-    std::cout << "1. Insertion\n"
-                 "2. Insertion (freshman)\n"
+    std::cout << "1. Insertion (enrolled student)\n"
+                 "2. Freshman Registration\n"
                  "3. Search\n"
                  "4. Sorting Option\n"
                  "5. Update\n"
@@ -28,8 +28,8 @@ static void printSearchMenu() {
 static void printSortMenu() {
     std::cout << "\n- Sorting Option -\n"
                  "1. Sort by Name\n"
-                 "2. Sort by Student ID (10 digits)\n"
-                 "3. Sort by Birth Year (4digits)\n"
+                 "2. Sort by Student ID\n"
+                 "3. Sort by Birth Year\n"
                  "4. Sort by Department Name\n> ";
 }
 
@@ -135,6 +135,7 @@ int main(int argc, char* argv[]) {
         }
         else if (sel == 2) {
             Student s;
+            std::cout << "\nStudent ID will be randomly assigned\n";
             std::cout << "\nName ?\n";        getline(std::cin, s.name);
             // 학번은 사용자에게 입력받지 않음
             std::cout << "Birth Year (4 digits) ?\n";
