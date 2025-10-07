@@ -36,8 +36,8 @@ bool StudentValidator::validBirthYear(int y) {
 }
 
 bool StudentValidator::validTel(const std::string& s) {
-    // 비어있을 수 있음, 비어있지 않으면 숫자만, 길이 제한
+    // 숫자만, 길이 12로 제한
+    if (s.empty()) return false;
     if (s.size() > 12) return false;
-    if (s.empty()) return true;
     return isDigits(s);
 }
