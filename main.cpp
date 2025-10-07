@@ -92,6 +92,7 @@ int main(int argc, char* argv[]) {
         int sel{};
         if (!(std::cin >> sel)) {
             std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "\nInvalid input. Please insert a number between 1 to 7.\n\n";
             continue;
         }
@@ -176,6 +177,7 @@ int main(int argc, char* argv[]) {
             int opt{};
             if (!(std::cin >> opt)) {
                 std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "\nInvalid input. Please insert a number between 1 to 6.\n\n";
                 continue;
             }
@@ -233,6 +235,7 @@ int main(int argc, char* argv[]) {
             int k{};
             if (!(std::cin >> k)) {
                 std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "\nInvalid input. Please insert a number between 1 to 4.\n\n";
                 continue;
             }
@@ -259,6 +262,7 @@ int main(int argc, char* argv[]) {
             int u{};
             if (!(std::cin >> u)) {
                 std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "\nInvalid input. Please insert a number between 1 to 3.\n\n";
                 continue;
             }
