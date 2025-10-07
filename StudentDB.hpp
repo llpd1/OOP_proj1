@@ -58,7 +58,7 @@ private:
     // 내부 상태
     std::string                 path_;
     std::vector<Student>        data_;
-    SortKey                     sortKey_{SortKey::StudentID};
+    SortKey                     sortKey_;
 
     // 분리된 컴포넌트
     StudentValidator            validator_;           // 무상태: 인스턴스 보유해도 무방
