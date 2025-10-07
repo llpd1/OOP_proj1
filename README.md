@@ -35,3 +35,7 @@
 1. 메인메뉴애서 1, 2번 메뉴 이름 변경
 2. 2번 메뉴 선택시 "Student ID will be randomly assigned" 문구 추가
 3. Sorting Option 괄호 속 문구 삭제
+
+2025/10/07 19:07
+1. StudentValidator.cpp에서 Tel 공백 허용 안 함으로 변경
+2. StudentDB.hpp에서 sortkey_ 디폴트 값 제거
