@@ -115,7 +115,7 @@ std::vector<Student> StudentDB::searchByName(const std::string& key) const {
     return out;
 }
 
-std::vector<Student> StudentDB::searchById(const std::string& id10) const {
+std::vector<Student> StudentDB::searchByID(const std::string& id10) const {
     std::vector<Student> out;
     for (const auto& s : data_) {
         if (s.studentID == id10) out.push_back(s);

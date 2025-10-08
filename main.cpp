@@ -190,7 +190,7 @@ int main(int argc, char* argv[]) {
                 printStudents(res);
             } else if (opt == 2) {
                 std::string id; std::cout << "\nStudent ID ?\n"; getline(std::cin, id);
-                auto res = db.searchById(id);
+                auto res = db.searchByID(id);
                 printStudents(res);
             } else if (opt == 3) {
                 int y{}; std::cout << "\nAdmission year ?\n";

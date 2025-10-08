@@ -32,7 +32,7 @@ public:
 
     // 검색
     std::vector<Student> searchByName(const std::string& key) const;      
-    std::vector<Student> searchById(const std::string& id10) const;        
+    std::vector<Student> searchByID(const std::string& id10) const;        
     std::vector<Student> searchByAdmissionYear(int year4) const;          
     std::vector<Student> searchByBirthYear(int year4) const;                
     std::vector<Student> searchByDepartmentKeyword(const std::string& kw) const; 
