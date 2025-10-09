@@ -1,5 +1,15 @@
 # OOP_proj1
 
+### 실행 방법 : 터미널에 아래 두 명령어 순서대로 실행 
+
+```bash
+g++ -std=c++17 main.cpp StudentDB.cpp StudentValidator.cpp FileStudentRepository.cpp -o studentdb.exe
+```
+
+```bash
+./studentdb.exe file.txt
+```
+
 2025/10/03
 1. 출력되는 문구 단어들 통일
 2. 파일이 없다면 파일 생성 후 파일이 생성됐다는 문구 출력
