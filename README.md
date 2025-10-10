@@ -52,3 +52,6 @@ g++ -std=c++17 main.cpp StudentDB.cpp StudentValidator.cpp FileStudentRepository
 
 2025/10/10 16:14
 1. main.cpp의 printStudents()에서 이름 출력 글자수 12 -> 15로 수정
+
+2025/10/10 17:18
+1. 주석 추가 및 번역
