@@ -41,7 +41,7 @@ static void printUpdateMenu() {
 }
 
 static void printStudents(const std::vector<Student>& list) {
-    const int W_NAME   = 12;
+    const int W_NAME   = 15;
     const int W_ID     = 10;
     const int W_DEPT   = 20;
     const int W_B_YEAR = 10;
