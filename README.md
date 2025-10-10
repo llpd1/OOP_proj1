@@ -49,3 +49,6 @@ g++ -std=c++17 main.cpp StudentDB.cpp StudentValidator.cpp FileStudentRepository
 2025/10/07 19:07
 1. StudentValidator.cpp에서 Tel 공백 허용 안 함으로 변경
 2. StudentDB.hpp에서 sortkey_ 디폴트 값 제거
+
+2025/10/10 16:14
+1. main.cpp의 printStudents()에서 이름 출력 글자수 12 -> 15로 수정
