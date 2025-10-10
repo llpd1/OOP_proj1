@@ -16,33 +16,33 @@ class StudentDB {
 public:
     explicit StudentDB(const std::string& path);
 
-    // 로드/세이브
+    // Load/Save
     bool load();
     bool save() const;
 
-    // 데이터가 비었는지 확인
+    // check if empty
     bool isEmpty() const;
 
-    // 삽입(중복 학번/전화 체크)
-    bool insert(const Student& s); // 편의 wrapper
+    // Insertion(duplicate StudentId/Tel check)
+    bool insert(const Student& s); // wrapper for convinience
     bool insert(const Student& s, std::vector<std::string>& err);
     
-    // 신입생 추가를 위한 함수 선언
+    // Function for Freshman Insertion
     bool insertFreshman(Student& s, std::vector<std::string>& err);
 
-    // 검색
+    // Search
     std::vector<Student> searchByName(const std::string& key) const;      
     std::vector<Student> searchByID(const std::string& id10) const;        
     std::vector<Student> searchByAdmissionYear(int year4) const;          
     std::vector<Student> searchByBirthYear(int year4) const;                
     std::vector<Student> searchByDepartmentKeyword(const std::string& kw) const; 
 
-    // 정렬 옵션
+    // Sorting Option
     std::vector<Student>& sortByKey();
     void setSortKey(SortKey k);
     SortKey sortKey() const;
 
-    // 수정
+    // Update
     bool updateName(const std::string& studentID, const std::string& newName, std::string& err);
     bool updateDepartment(const std::string& studentID, const std::string& newDept, std::string& err);
     bool updateTel(const std::string& studentID, const std::string& newTel, std::string& err);
@@ -50,19 +50,19 @@ public:
     void groupSummary(const std::vector<StatKey>& order, std::ostream& out) const;
 
 private:
-    static std::string toLower(std::string s);  // 소문자 변환
+    static std::string toLower(std::string s);  // convert to small letter
 
     bool existsID(const std::string& ID) const;
     bool existsTel(const std::string& Tel) const;
 
-    // 내부 상태
+    // Internal state
     std::string                 path_;
     std::vector<Student>        data_;
     SortKey                     sortKey_;
 
-    // 분리된 컴포넌트
-    StudentValidator            validator_;           // 무상태: 인스턴스 보유해도 무방
-    FileStudentRepository       repository_;          // 파일 I/O 담당
+    // Separated components
+    StudentValidator            validator_;           // Stateless: safe to hold as an instance
+    FileStudentRepository       repository_;          // Responsible for file I/O
 };
 
 #endif // STUDENT_DB_HPP

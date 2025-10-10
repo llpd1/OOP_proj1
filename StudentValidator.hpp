@@ -5,19 +5,19 @@
 
 class StudentValidator {
 public:
-    // 이름 유효성: 비어있지 않고 길이 <= 15, 영문/공백만 허용
+    // Name validation: not empty, length <= 15, letters and spaces only
     static bool validName(const std::string& s);
 
-    // 학번 유효성: 정확히 10자리 숫자, 앞 4자리는 1900~2100
+    // Student ID validation: exactly 10 digits, first 4 digits between 1900 and 2100
     static bool validStudentID(const std::string& s);
 
-    // 단과대 유효성: 길이 <= 20, 영문/공백만 허용
+    // Department validation: length <= 20, letters and spaces only
     static bool validDepartment(const std::string& s);
 
-    // 출생연도 유효성: 1900~2100
+    // Birth year validation: must be between 1900 and 2100
     static bool validBirthYear(int y);
 
-    // 전화번호 유효성: 비어있을 수 있으며 숫자만 가능, 길이 <= 12
+    // Telephone validation: may be empty, digits only, length <= 12
     static bool validTel(const std::string& s);
 
 private:

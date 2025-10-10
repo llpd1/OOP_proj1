@@ -9,19 +9,19 @@ class FileStudentRepository {
 public:
     explicit FileStudentRepository(std::string path);
 
-    // 파일에서 학생 목록을 읽어들인다.
-    // - 파일이 없으면 생성하고 안내 문구 출력 (원래 동작 유지)
-    // - 각 라인을 탭(\t)으로 파싱한다.
-    // - birthYear 파싱 실패 시 해당 레코드는 건너뜀(원래 동작과 동일하게 "무시")
+    // Loads the list of students from the file.
+    // - If the file does not exist, create a new empty file and display a notice.
+    // - Each record is parsed as a tab-separated line.
+    // - If birthYear cannot be parsed as an integer, that record is skipped.
     bool load(std::vector<Student>& out) const;
 
-    // 전체 학생 목록을 파일에 저장 (탭 구분, \n)
+    // Saves all student records to the file (tab-separated, each ending with '\n').
     bool save(const std::vector<Student>& in) const;
 
     const std::string& path() const { return path_; }
 
 private:
-    std::string path_;
+    std::string path_;// Path to the text file storing student records
 };
 
 #endif // FILE_STUDENT_REPOSITORY_HPP

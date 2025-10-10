@@ -78,7 +78,7 @@ static void printStudents(const std::vector<Student>& list) {
     }
     std::cout << '\n';
 }
-
+// Main Function
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         std::cerr << "Usage: a.exe file1.txt\n\n";
@@ -98,6 +98,7 @@ int main(int argc, char* argv[]) {
         }
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
+        // 1. Insertion
         if (sel == 1) {
             Student s;
             std::cout << "\nName ?\n";        getline(std::cin, s.name);
@@ -133,24 +134,25 @@ int main(int argc, char* argv[]) {
                 db.save();
             }
         }
+        // 2. Freshman Registration
         else if (sel == 2) {
             Student s;
             std::cout << "\nStudent ID will be randomly assigned\n";
             std::cout << "\nName ?\n";        getline(std::cin, s.name);
-            // 학번은 사용자에게 입력받지 않음
+            // For freshmen, a new random student ID will be generated internally
             std::cout << "Birth Year (4 digits) ?\n";
             if (!(std::cin >> s.birthYear)) {
                 std::cout << "Error : Birth Year must be 4 digits number\n";
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                continue;
+                continue;// Return to the main loop/menu
             }
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "Department ?\n";  getline(std::cin, s.department);
             std::cout << "Tel ?\n";         getline(std::cin, s.tel);
 
             std::vector<std::string> err;
-            // StudentDB에 새로 추가한 insertFreshman 함수 호출
+            // Attempt to insert a freshman (auto-ID assignment inside StudentDB)
             if (!db.insertFreshman(s, err)) {
                 if (err.size() && err[0] == "DUP_TEL") {
                     std::cout << "\nError : Already inserted telephone number\n\n";
@@ -164,11 +166,12 @@ int main(int argc, char* argv[]) {
                     std::cout << "\n\n";
                 }
             } else {
-                // 성공 시, 생성된 학번을 사용자에게 알려줌
+                // On success, StudentDB sets s.studentID; show it to the user and persist
                 std::cout << "\nInserted with new Student ID: " << s.studentID << "\n\n";
                 db.save();
             }
         }
+        // 3. Search
         else if (sel == 3) {
             if (db.isEmpty()) {
                 std::cout << "\nDatabase is empty. Please insert students first.\n\n";
@@ -227,6 +230,7 @@ int main(int argc, char* argv[]) {
                 continue;
             }
         }
+        // 4. Sorting Option
         else if (sel == 4) {
             if (db.isEmpty()) {
                 std::cout << "\nDatabase is empty. Please insert students first.\n\n";
@@ -254,6 +258,7 @@ int main(int argc, char* argv[]) {
             db.save();
             std::cout << "\nSorting updated.\n\n";
         }
+        // 5. Update
         else if (sel == 5) {
             if (db.isEmpty()) {
                 std::cout << "\nDatabase is empty. Please insert students first.\n\n";
@@ -305,7 +310,8 @@ int main(int argc, char* argv[]) {
                 continue;
             }
         }
-        else if (sel == 6) { // ADD: Statistics
+        // 6. Statistics
+        else if (sel == 6) { 
             if (db.isEmpty()) {
                 std::cout << "\nDatabase is empty. Please insert students first.\n\n";
             } else {
@@ -339,6 +345,7 @@ int main(int argc, char* argv[]) {
                 }
             }
         }
+        // 7. Exit
         else if (sel == 7) {
             db.save();
             break;
