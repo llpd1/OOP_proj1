@@ -149,7 +149,7 @@ int main(int argc, char* argv[]) {
             }
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "Department ?\n";  getline(std::cin, s.department);
-            std::cout << "Tel ?(no spacing allowed)\n";         getline(std::cin, s.tel);
+            std::cout << "Tel ? (no spacing allowed)\n";         getline(std::cin, s.tel);
 
             std::vector<std::string> err;
             // Attempt to insert a freshman (auto-ID assignment inside StudentDB)
