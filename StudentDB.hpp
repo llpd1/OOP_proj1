@@ -58,7 +58,7 @@ private:
     // Internal state
     std::string                 path_;
     std::vector<Student>        data_;
-    SortKey                     sortKey_{Sortkey::Name};
+    SortKey                     sortKey_{SortKey::Name};
 
     // Separated components
     StudentValidator            validator_;           // Stateless: safe to hold as an instance
