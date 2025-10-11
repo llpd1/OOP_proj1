@@ -112,7 +112,7 @@ int main(int argc, char* argv[]) {
             }
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "Department ?\n";  getline(std::cin, s.department);
-            std::cout << "Tel ?\n";         getline(std::cin, s.tel);
+            std::cout << "Tel ? (space is not allowed between digits)\n";         getline(std::cin, s.tel);
 
             std::vector<std::string> err;
             if (!db.insert(s, err)) {
