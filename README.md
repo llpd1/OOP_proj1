@@ -58,3 +58,6 @@ g++ -std=c++17 main.cpp StudentDB.cpp StudentValidator.cpp FileStudentRepository
 
 20205/10/11
 1. Tel 입력 받을 때 no spacing allowed 문구 추가
+
+2025/10/11 23:28
+1. StudentDB.hpp에서 sortkey_ 디폴트 값 설정
