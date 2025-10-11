@@ -50,6 +50,9 @@ g++ -std=c++17 main.cpp StudentDB.cpp StudentValidator.cpp FileStudentRepository
 1. StudentValidator.cpp에서 Tel 공백 허용 안 함으로 변경
 2. StudentDB.hpp에서 sortkey_ 디폴트 값 제거
 
+20205/10/11
+1. Tel 입력 받을 때 no spacing allowed 문구 추가
+
 2025/10/10 16:14
 1. main.cpp의 printStudents()에서 이름 출력 글자수 12 -> 15로 수정
 
